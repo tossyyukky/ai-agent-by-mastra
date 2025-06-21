@@ -1,4 +1,5 @@
 import { Mastra } from '@mastra/core/mastra';
+import { VercelDeployer } from '@mastra/deployer-vercel';
 import { PinoLogger } from '@mastra/loggers';
 import { LibSQLStore } from '@mastra/libsql';
 import { fredAgent } from './agents/fred-agent';
@@ -6,6 +7,7 @@ import { fredAgent } from './agents/fred-agent';
 export const mastra = new Mastra({
   workflows: {},
   agents: { fredAgent },
+  deployer: new VercelDeployer(),
   storage: new LibSQLStore({
     // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db
     url: ':memory:',
