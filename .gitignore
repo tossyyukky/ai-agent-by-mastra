@@ -28,3 +28,4 @@ lerna-debug.log*
 # Credentials - Added for this project
 *credentials*.json
 *token*.json
+.vercel

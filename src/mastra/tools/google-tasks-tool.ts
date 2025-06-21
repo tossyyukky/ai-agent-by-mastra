@@ -1,26 +1,31 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import fs from 'fs/promises';
-import path from 'path';
-import { google, Auth } from 'googleapis';
+import { google, tasks_v1, Auth } from 'googleapis';
 
-const TOKEN_PATH = path.resolve(process.cwd(), '../../', 'token.json');
-
-/**
- * Create an OAuth2 client with the credentials from token.json
- */
-async function getAuthenticatedClient(): Promise<Auth.OAuth2Client> {
-    try {
-        const content = await fs.readFile(TOKEN_PATH, 'utf-8');
-        const credentials = JSON.parse(content);
-        const client = google.auth.fromJSON(credentials);
-        return client as Auth.OAuth2Client;
-    } catch (err) {
-        console.error('Error loading token file:', err);
+async function authorize(): Promise<Auth.OAuth2Client> {
+    const creds = process.env.GOOGLE_CREDENTIALS;
+    if (!creds) {
         throw new Error(
-            'Failed to load token.json. Please ensure you have authenticated by running `node google-auth.cjs`'
+            'Missing GOOGLE_CREDENTIALS environment variable. Have you set it in your Vercel project settings?',
         );
     }
+    const keys = JSON.parse(creds);
+    const key = keys.installed || keys.web;
+
+    const token = process.env.GOOGLE_TOKEN;
+    if (!token) {
+        throw new Error(
+            'Missing GOOGLE_TOKEN environment variable. Have you set it in your Vercel project settings?',
+        );
+    }
+
+    const client = new google.auth.OAuth2(
+        key.client_id,
+        key.client_secret,
+        key.redirect_uris[0],
+    );
+    client.setCredentials(JSON.parse(token));
+    return client;
 }
 
 export const googleTasksTool = createTool({
@@ -29,7 +34,7 @@ export const googleTasksTool = createTool({
     inputSchema: z.object({}), // No input needed
     execute: async () => {
         try {
-            const auth = await getAuthenticatedClient();
+            const auth = await authorize();
             const tasksService = google.tasks({ version: 'v1', auth });
 
             // First, get all the task lists
