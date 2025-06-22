@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "mastra dev",
-    "build": "npx mastra build && mv .mastra/output/.vercel/output/* .mastra/output/ && rm -rf .mastra/output/.vercel",
+    "build": "mastra build",
     "start": "mastra start"
   },
   "keywords": [],
@@ -20,7 +20,7 @@
     "@ai-sdk/openai": "^1.3.22",
     "@google-cloud/local-auth": "^3.0.1",
     "@mastra/core": "^0.10.6",
-    "@mastra/deployer-vercel": "^0.10.6",
+    "@mastra/deployer-cloudflare": "^0.10.6",
     "@mastra/libsql": "^0.10.3",
     "@mastra/loggers": "^0.10.2",
     "@mastra/memory": "^0.10.4",
