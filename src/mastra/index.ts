@@ -7,7 +7,12 @@ import { fredAgent } from './agents/fred-agent';
 export const mastra = new Mastra({
   workflows: {},
   agents: { fredAgent },
-  deployer: new CloudflareDeployer(),
+  deployer: new CloudflareDeployer({
+    scope: process.env.CLOUDFLARE_ACCOUNT_ID || '',
+    auth: {
+      apiToken: process.env.CLOUDFLARE_API_TOKEN || '',
+    },
+  }),
   storage: new LibSQLStore({
     // stores telemetry, evals, ... into memory storage, if it needs to persist, change to file:../mastra.db
     url: ':memory:',
