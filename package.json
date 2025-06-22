@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "mastra dev",
-    "build": "mastra build",
+    "build": "npx mastra build && mv .mastra/output/.vercel/output/* .mastra/output/ && rm -rf .mastra/output/.vercel",
     "start": "mastra start"
   },
   "keywords": [],
@@ -14,7 +14,7 @@
   "description": "",
   "type": "module",
   "engines": {
-    "node": ">=20.9.0"
+    "node": "20.x"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.22",
